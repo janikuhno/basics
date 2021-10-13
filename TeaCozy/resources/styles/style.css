@@ -19,14 +19,15 @@ header {
     top: 0px;
     align-items: center;
     justify-content: space-between;
-    z-index: 2;
+    z-index: 1;
+    opacity: 1;
 }
 #logo-img {
     height: 50px;
-    padding-left: 10px;
+    margin-left: 10px;
 }
 nav a {
-    padding: 10px;
+    margin: 10px;
     color: seashell;
     list-style-type: none;
     text-decoration: underline;
@@ -34,18 +35,84 @@ nav a {
 main {
     position: relative;
     top: 69px;
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 66px;
 }
 #mission {
     display: flex;
     background-image: url("../images/img-mission-background.jpg");
-    height: 700px;
-    width: 1200px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    max-height: 700px;
+    max-width: 1200px;
+    width: 90%;
+    flex: 1 1200px;
     align-items: center;
-    align-content: center;
     justify-content: center;
     margin: 0 auto;
 }
-.container {
+#mission div {
     width: 100%;
     background-color: black;
+}
+#mission div h2, #mission div h4 {
+    margin: 0;
+    padding: 0.5%;
+}
+#featured {
+    margin: 69px auto;
+    width: 1000px;
+}
+.container {
+    display: inline-flex;
+    flex-direction: column;
+    padding: 10px;
+}
+.container h4 {
+    margin: 0;
+    padding: 10px;
+}
+.container img {
+    max-height: 200px;
+    max-width: 300px;
+}
+#locations {
+    width: 90%;
+    max-height: 500px;
+    max-width: 1200px;
+    display: flex;
+    padding-top: 5%;
+    margin-top: 5%;
+    align-items: center;
+    justify-content: left;
+    background-image: url(../images/img-locations-background.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    flex: 1 1200px;
+    flex-flow: column;
+}
+#locations div h2 {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background-color: transparent;
+}
+.location {
+    display: inline-flex;
+    flex-direction: column;
+    background-color: black;
+    width: 300px;
+    opacity: 1;
+    margin: 15px 20px;
+}
+footer {
+    height: 200px;
+}
+#copyright {
+    text-align: left;
 }
