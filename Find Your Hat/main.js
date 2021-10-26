@@ -7,11 +7,7 @@ const fieldCharacter = '░';
 const pathCharacter = '*';
 
 /* Other constants */
-const up = 'up';
-const down = 'down';
-const left = 'left';
-const right = 'right';
-
+const directions = ['up', 'down', 'left', 'right'];
 
 /* Class representing the game field */
 class Field {
@@ -26,24 +22,25 @@ class Field {
         });
     }
     move(direction) {
-        // check if good input
         switch (direction) {
-            case up:
+            // check if out of bounds
+            case directions[0]: //up
                 // move +1 hor
+                this.field[this.playerHorPos + 1][this.playerVerPos] = pathCharacter;
                 break;
-            case down:
+            case directions[1]: //down
                 // move -1 hor
                 break;
-            case left:
+            case directions[2]: //left
                 // move -1 ver
                 break;
-            case right:
+            case directions[3]: //right
                 // move +1 ver
                 break;
             default:
                 break;
         }
-        // check if out of bounds
+        this.field.print();
     }
     findPlayerStartPos() {
         for (let x = 0; x < this.field.length; x++) {
@@ -60,9 +57,21 @@ class Field {
 /* Helper methods */
 
 // input checker method: returns true or false for exit
+function checkInput(input) {
+    if (directions.includes(input)) {
+        return true;
+    } else if (input === 'exit') {
+        console.log('Thanks for playing!');
+        return false;
+    } else {
+        console.log('Invalid command!');
+        return false;
+    }
+}
 
 /* Main game */
 function playGame() {
+    /* Temp constant for field */
     const gameField = new Field([
         ['*', '░', 'O'],
         ['░', 'O', '░'],
@@ -74,14 +83,16 @@ function playGame() {
     do {
         // ask for input (move direction or exit to quit)
         const command = prompt('Input command: ');
-        gameField.print();
-        // after entering input print the current map and mark the tiles visited by pathCharacter
-        // prompt for next move
-        // continue until: win: finding the hat, lose: landing in a hole, move outside the field
-        // when any of the above happens, inform user and end the game
-        if (command === 'exit') {
+        
+        if (checkInput(command)) {
+            // after entering input print the current map and mark the tiles visited by pathCharacter
+            gameField.move(command);
+            // prompt for next move
+        } else {
             exit = true;
         }
+        // continue until: win: finding the hat, lose: landing in a hole, move outside the field
+        // when any of the above happens, inform user and end the game
     } while (!exit);
 }
 
