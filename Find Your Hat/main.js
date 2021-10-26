@@ -11,8 +11,8 @@ const directions = ['up', 'down', 'left', 'right'];
 
 /* Class representing the game field */
 class Field {
-    constructor(field) {
-        this.field = field; //Field.generateField
+    constructor(height, width) {
+        this.field = Field.generateField(height, width);
         this.playerHorPos = this.findPlayerStartPos()[0];
         this.playerVerPos = this.findPlayerStartPos()[1];
     }
@@ -143,24 +143,51 @@ class Field {
             }
         }
     }
-    //static generateField
+    static generateField(height, width) {
+        //takes supplied height and width and generates the game field
+        let gField = [];
+        let hatInField = false;
+
+        for (let i = 0; i < height; i++) {
+            gField[i] = [];
+            for (let j = 0; j < width; j++) {
+                if (i === 0 && j === 0) {
+                    gField[i][j] = pathCharacter;
+                } else {
+                    let randNum = Math.floor(Math.random() * 100);
+                    
+                    // Account for chance that last element and no hat
+                    if (i === height - 1 && j === width - 1 && !hatInField) {
+                        gField[i][j] = hat;
+                        hatInField = true;
+                    } else {
+                        if (randNum >= 0 && randNum <= 1 && !hatInField) {
+                            gField[i][j] = hat;
+                            hatInField = true;
+                        } else if (randNum > 1 && randNum < 50) {
+                            gField[i][j] = hole;
+                        } else {
+                            gField[i][j] = fieldCharacter;
+                        }
+                    }
+                }
+            }
+        }
+
+        return gField;
+    }
 }
 
 /* Main game */
 function playGame() {
-    /* Temp constant for field */
-    const gameField = new Field([
-        ['*', '░', 'O'],
-        ['░', 'O', '░'],
-        ['░', '^', '░'],
-    ]);
-
-    let exit = false;
+    // Create game field
+    const gameField = new Field(10, 10);
 
     // Print the game field once at the start of the game
     gameField.print();
 
     /* Game loop */
+    let exit = false;
     do {
         const command = prompt('Input command: ');
         
