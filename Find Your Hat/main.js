@@ -22,8 +22,11 @@ class Field {
         });
     }
     move(direction) {
+        // Check to see if a legal move
         if(this.checkIfLegalMovement(direction)) {
+            // Check to see if a win/lose condition has been met
             if(!this.checkIfWinLose(direction)) {
+                // No win/lose, so let's move to where the user wanted to move to
                 switch (direction) {
                     case directions[0]: //up
                         this.field[this.playerHorPos - 1][this.playerVerPos] = pathCharacter;
@@ -43,16 +46,20 @@ class Field {
                         return true;
                 }
             } else {
+                // Win/lose condition met
                 return false;
             }
         }
     }
     checkIfWinLose(direction) {
+        // Check which direction the user wants to move to
         if (direction === directions[0]) {
+            // See if it's the hat
             if (this.field[this.playerHorPos - 1][this.playerVerPos] === hat) {
                 console.log('You found your hat! You win!')
                 return true;
             }
+            // See if it's a hole
             if (this.field[this.playerHorPos - 1][this.playerVerPos] === hole) {
                 console.log('You fell in a hole! Game over...');
                 return true;
@@ -85,13 +92,14 @@ class Field {
                 return true;
             }
         } else {
+            // Neither hat nor hole so let's keep on moving
             return false;
         }
     }
     checkIfLegalMovement(direction) {
         // check if going up is legal move
         if (direction === directions[0]) {
-            if (this.playerHorPos - 1 > 0) {
+            if (this.playerHorPos - 1 >= 0) {
                 return true;
             } else {
                 console.log('Out of bounds!');
@@ -109,7 +117,7 @@ class Field {
         }
         // check if going left is a legal move
         if (direction === directions[2]) {
-            if (this.playerVerPos - 1 > 0) {
+            if (this.playerVerPos - 1 >= 0) {
                 return true;
             } else {
                 console.log('Out of bounds!');
@@ -149,14 +157,15 @@ function playGame() {
 
     let exit = false;
 
+    // Print the game field once at the start of the game
     gameField.print();
 
+    /* Game loop */
     do {
-        // ask for input (move direction or exit to quit)
         const command = prompt('Input command: ');
         
+        // Check if direction is allowed, else see if it's the 'exit' command, else inform user of invalid command
         if (directions.includes(command)) {
-            // after entering input print the current map and mark the tiles visited by pathCharacter
             if(gameField.move(command)) {
                 gameField.print();
             } else {
