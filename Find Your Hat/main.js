@@ -22,51 +22,109 @@ class Field {
         });
     }
     move(direction) {
-        switch (direction) {
-            case directions[0]: //up
-                if (this.playerHorPos - 1 > 0) { // check if going up is legal move
-                    this.field[this.playerHorPos - 1][this.playerVerPos] = pathCharacter;
-                    this.playerHorPos -= 1;
-                    return true;
-                } else {
-                    console.log('Out of bounds!');
-                    return false;
+        if(this.checkIfLegalMovement(direction)) {
+            if(!this.checkIfWinLose(direction)) {
+                switch (direction) {
+                    case directions[0]: //up
+                        this.field[this.playerHorPos - 1][this.playerVerPos] = pathCharacter;
+                        this.playerHorPos -= 1;
+                        return true;
+                    case directions[1]: //down
+                        this.field[this.playerHorPos + 1][this.playerVerPos] = pathCharacter;
+                        this.playerHorPos += 1;
+                        return true;
+                    case directions[2]: //left
+                        this.field[this.playerHorPos][this.playerVerPos - 1] = pathCharacter;
+                        this.playerVerPos -= 1;
+                        return true;
+                    case directions[3]: //right
+                        this.field[this.playerHorPos][this.playerVerPos + 1] = pathCharacter;
+                        this.playerVerPos += 1;
+                        return true;
                 }
-            case directions[1]: //down
-                if (this.playerHorPos + 1 < this.field.length) {
-                    this.field[this.playerHorPos + 1][this.playerVerPos] = pathCharacter;
-                    this.playerHorPos += 1;
-                    return true;
-                } else {
-                    console.log('Out of bounds!');
-                    return false;
-                }
-            case directions[2]: //left
-                if (this.playerVerPos - 1 > 0) {
-                    this.field[this.playerHorPos][this.playerVerPos - 1] = pathCharacter;
-                    this.playerVerPos -= 1;
-                    return true;
-                } else {
-                    console.log('Out of bounds!');
-                    return false;
-                }
-            case directions[3]: //right
-                if (this.playerVerPos < this.field[0].length) {
-                    this.field[this.playerHorPos][this.playerVerPos + 1] = pathCharacter;
-                    this.playerVerPos += 1;
-                    return true;
-                } else {
-                    console.log('Out of bounds!');
-                    return false;
-                }
-            default:
-                console.log('Out of bounds!');
+            } else {
                 return false;
+            }
         }
     }
-    checkPosition() {
-        // check if hat
-        // check if hole
+    checkIfWinLose(direction) {
+        if (direction === directions[0]) {
+            if (this.field[this.playerHorPos - 1][this.playerVerPos] === hat) {
+                console.log('You found your hat! You win!')
+                return true;
+            }
+            if (this.field[this.playerHorPos - 1][this.playerVerPos] === hole) {
+                console.log('You fell in a hole! Game over...');
+                return true;
+            }
+        } else if (direction === directions[1]) {
+            if (this.field[this.playerHorPos + 1][this.playerVerPos] === hat) {
+                console.log('You found your hat! You win!')
+                return true;
+            }
+            if (this.field[this.playerHorPos + 1][this.playerVerPos] === hole) {
+                console.log('You fell in a hole! Game over...');
+                return true;
+            }
+        } else if (direction === directions[2]) {
+            if (this.field[this.playerHorPos][this.playerVerPos - 1] === hat) {
+                console.log('You found your hat! You win!')
+                return true;
+            }
+            if (this.field[this.playerHorPos][this.playerVerPos - 1] === hole) {
+                console.log('You fell in a hole! Game over...');
+                return true;
+            }
+        } else if (direction === directions[3]) {
+            if (this.field[this.playerHorPos][this.playerVerPos + 1] === hat) {
+                console.log('You found your hat! You win!')
+                return true;
+            }
+            if (this.field[this.playerHorPos][this.playerVerPos + 1] === hole) {
+                console.log('You fell in a hole! Game over...');
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
+    checkIfLegalMovement(direction) {
+        // check if going up is legal move
+        if (direction === directions[0]) {
+            if (this.playerHorPos - 1 > 0) {
+                return true;
+            } else {
+                console.log('Out of bounds!');
+                return false;
+            }
+        }
+        // check if going down is a legal move
+        if (direction === directions[1]) {
+            if (this.playerHorPos + 1 < this.field.length) {
+                return true;
+            } else {
+                console.log('Out of bounds!');
+                return false;
+            }
+        }
+        // check if going left is a legal move
+        if (direction === directions[2]) {
+            if (this.playerVerPos - 1 > 0) {
+                return true;
+            } else {
+                console.log('Out of bounds!');
+                return false;
+            }
+        }
+        // check if going right is a legal move
+        if (direction === directions[3]) {
+            if (this.playerVerPos < this.field[0].length) {
+                return true;
+            } else {
+                console.log('Out of bounds!');
+                return false;
+            }
+        }
     }
     findPlayerStartPos() {
         for (let x = 0; x < this.field.length; x++) {
@@ -78,20 +136,6 @@ class Field {
         }
     }
     //static generateField
-}
-
-/* Helper methods */
-// Input checker: checks if input is good
-function checkInput(input) {
-    if (directions.includes(input)) {
-        return true;
-    } else if (input === 'exit') {
-        console.log('Thanks for playing!');
-        return false;
-    } else {
-        console.log('Invalid command!');
-        return false;
-    }
 }
 
 /* Main game */
@@ -111,19 +155,19 @@ function playGame() {
         // ask for input (move direction or exit to quit)
         const command = prompt('Input command: ');
         
-        if (checkInput(command)) {
+        if (directions.includes(command)) {
             // after entering input print the current map and mark the tiles visited by pathCharacter
-            if(!gameField.move(command)) {
-                exit = true;
-            } else {
+            if(gameField.move(command)) {
                 gameField.print();
+            } else {
+                exit = true;
             }
-            // prompt for next move
-        } else {
+        } else if (command === 'exit') {
+            console.log('Thanks for playing!');
             exit = true;
+        } else {
+            console.log('Invalid command!');
         }
-        // continue until: win: finding the hat, lose: landing in a hole, move outside the field
-        // when any of the above happens, inform user and end the game
     } while (!exit);
 }
 
