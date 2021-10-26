@@ -23,24 +23,50 @@ class Field {
     }
     move(direction) {
         switch (direction) {
-            // check if out of bounds
             case directions[0]: //up
-                // move +1 hor
-                this.field[this.playerHorPos + 1][this.playerVerPos] = pathCharacter;
-                break;
+                if (this.playerHorPos - 1 > 0) { // check if going up is legal move
+                    this.field[this.playerHorPos - 1][this.playerVerPos] = pathCharacter;
+                    this.playerHorPos -= 1;
+                    return true;
+                } else {
+                    console.log('Out of bounds!');
+                    return false;
+                }
             case directions[1]: //down
-                // move -1 hor
-                break;
+                if (this.playerHorPos + 1 < this.field.length) {
+                    this.field[this.playerHorPos + 1][this.playerVerPos] = pathCharacter;
+                    this.playerHorPos += 1;
+                    return true;
+                } else {
+                    console.log('Out of bounds!');
+                    return false;
+                }
             case directions[2]: //left
-                // move -1 ver
-                break;
+                if (this.playerVerPos - 1 > 0) {
+                    this.field[this.playerHorPos][this.playerVerPos - 1] = pathCharacter;
+                    this.playerVerPos -= 1;
+                    return true;
+                } else {
+                    console.log('Out of bounds!');
+                    return false;
+                }
             case directions[3]: //right
-                // move +1 ver
-                break;
+                if (this.playerVerPos < this.field[0].length) {
+                    this.field[this.playerHorPos][this.playerVerPos + 1] = pathCharacter;
+                    this.playerVerPos += 1;
+                    return true;
+                } else {
+                    console.log('Out of bounds!');
+                    return false;
+                }
             default:
-                break;
+                console.log('Out of bounds!');
+                return false;
         }
-        this.field.print();
+    }
+    checkPosition() {
+        // check if hat
+        // check if hole
     }
     findPlayerStartPos() {
         for (let x = 0; x < this.field.length; x++) {
@@ -55,8 +81,7 @@ class Field {
 }
 
 /* Helper methods */
-
-// input checker method: returns true or false for exit
+// Input checker: checks if input is good
 function checkInput(input) {
     if (directions.includes(input)) {
         return true;
@@ -80,13 +105,19 @@ function playGame() {
 
     let exit = false;
 
+    gameField.print();
+
     do {
         // ask for input (move direction or exit to quit)
         const command = prompt('Input command: ');
         
         if (checkInput(command)) {
             // after entering input print the current map and mark the tiles visited by pathCharacter
-            gameField.move(command);
+            if(!gameField.move(command)) {
+                exit = true;
+            } else {
+                gameField.print();
+            }
             // prompt for next move
         } else {
             exit = true;
