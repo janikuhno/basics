@@ -1,2 +1,4 @@
 jamming/src/util/.config.js
 test-netlify/node_modules
+jamming/build/
+jamming/node_modules
